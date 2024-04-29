@@ -10,7 +10,7 @@ const CartItem = (props) => {
       console.log(totalItemInCart)
   },[totalItemInCart])
   return (
-    <li className={classes.item}>
+    <li key={Math.random()} className={classes.item}>
       <header>
         <h3>{title}</h3>
         <div className={classes.price}>

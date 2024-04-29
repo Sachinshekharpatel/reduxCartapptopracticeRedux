@@ -5,6 +5,7 @@ const initialState = {
 };
 const cartButtonState = {
   cartBtnModal: false,
+  notification: null,
 };
 
 const cartButtonSlice = createSlice({
@@ -13,6 +14,9 @@ const cartButtonSlice = createSlice({
   reducers: {
     toggle: (state) => {
       state.cartBtnModal = !state.cartBtnModal;
+    },
+    sendingDataState: (state, action) => {
+      state.notification = action.payload;
     },
   },
 });
@@ -36,20 +40,18 @@ const cartSlice = createSlice({
     },
     removeItem: (state, action) => {
       // console.log(action.payload);
-       
+
       const existingItemIndex = state.cartItemsArray.findIndex(
         (item) => item.title === action.payload
       );
 
       if (existingItemIndex !== -1) {
-       
-        if(state.cartItemsArray[existingItemIndex].quantity > 1){
+        if (state.cartItemsArray[existingItemIndex].quantity > 1) {
           state.cartItemsArray[existingItemIndex].quantity -= 1;
-        }else if (state.cartItemsArray[existingItemIndex].quantity === 1){
+        } else if (state.cartItemsArray[existingItemIndex].quantity === 1) {
           state.cartItemsArray.splice(existingItemIndex, 1);
         }
       }
-      
     },
   },
 });
