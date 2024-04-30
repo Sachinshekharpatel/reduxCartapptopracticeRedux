@@ -1,7 +1,18 @@
 import { createSlice, configureStore } from "@reduxjs/toolkit";
+import axios from "axios";
+
+let dataCart ; 
+const dataFromapi = async ()=>{
+  const response = await axios.get(`https://react-project-ftshekhar-default-rtdb.europe-west1.firebasedatabase.app/cartItems.json`);
+  if (response.status === 200) {
+    console.log(response.data);
+    dataCart = response.data
+  }
+}
+await dataFromapi();
 
 const initialState = {
-  cartItemsArray: [],
+  cartItemsArray: dataCart || [],
 };
 const cartButtonState = {
   cartBtnModal: false,
@@ -62,6 +73,31 @@ const store = configureStore({
     cartButton: cartButtonSlice.reducer,
   },
 });
+
+export const SendCartData = async (cart) => {
+  return async (dispatch) => {
+    dispatch(cartBtnActions.sendingDataState(false));
+    const sendRequest = async () => {
+      const response = await axios.put(
+        'https://react-project-ftshekhar-default-rtdb.europe-west1.firebasedatabase.app/cartItems.json',
+        cart
+      );
+
+    }
+
+    try {
+      if (response.status !== 200) {
+        console.log(response);
+        dispatch(cartBtnActions.sendingDataState(false));
+        await sendRequest();
+      }
+    } catch (error) {
+      dispatch(cartBtnActions.sendingDataState(true));
+    }
+ 
+  };
+};
+
 export const cartBtnActions = cartButtonSlice.actions;
 export const cartArrayActions = cartSlice.actions;
 

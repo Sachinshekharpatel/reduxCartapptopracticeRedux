@@ -18,13 +18,14 @@ function App() {
   const selectBtnModalstatus = useSelector(
     (state) => state.cartButton.cartBtnModal
   );
+ 
   // const sendingdataBoolean = useSelector(state => state.cartButton.sendingDataState)
   const url = `https://react-project-ftshekhar-default-rtdb.europe-west1.firebasedatabase.app/cartItems.json`;
   useEffect(() => {
     console.log(selectBtnModalstatus);
     const sendcartData = async () => {
       try {
-        const response = await axios.post(url, dataTosend);
+        const response = await axios.put(url, dataTosend);
         if (response.status !== 200) {
           console.log(response);
           dispatch(cartBtnActions.sendingDataState(false));
@@ -39,11 +40,25 @@ function App() {
     sendcartData();
     console.log(notificationStatus);
   }, [selectBtnModalstatus, dataTosend, notificationStatus]);
-
+  useEffect(() => {
+    const sendcartData = async () => {
+      const response = await axios.get(`https://react-project-ftshekhar-default-rtdb.europe-west1.firebasedatabase.app/cartItems.json`);
+      if (response.status === 200) {
+        console.log(response.data);
+      }
+    }
+    sendcartData()
+   }, [dataTosend]);
   return (
     <Fragment>
-      {notificationStatus===null && <Notification status="pending" title="Sending..." message="Sending cart data!" />}
-      {notificationStatus===false && (
+      {notificationStatus === null && (
+        <Notification
+          status="pending"
+          title="Sending..."
+          message="Sending cart data!"
+        />
+      )}
+      {notificationStatus === false && (
         <Notification
           status="Failed"
           title="Failed!"
